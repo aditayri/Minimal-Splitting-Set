@@ -1,12 +1,17 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.PriorityQueue;
 
 
-public class SplittingSet extends Graph<Integer>
+public class SplittingSet extends Graph<Integer> 
 {
 	DataStructure DS;
 	int num_of_rules;
@@ -37,6 +42,29 @@ public class SplittingSet extends Graph<Integer>
 		SuperGraph sg = new SuperGraph(g);
 		List<Set<Vertex<Integer>>> allSources = sg.findAllRoots();
 		System.out.println(allSources);
+       /* Comparator<String> comparator = new StringLengthComparator();
+		PriorityQueue<String> pq=new PriorityQueue<String>();
+		pq.add("a");
+		pq.add("ab");
+		pq.add("a");
+		while (pq.size() != 0)
+        {
+            System.out.println(pq.remove());
+        }
+        */
+		SortedSet<Set<Vertex<Integer>>> sor = new TreeSet<>(Comparator.comparing(Set::size));
+		PriorityQueue<Set<Vertex<Integer>>> pq=new PriorityQueue<>(Comparator.comparing(Set::size));
+		for (Set<Vertex<Integer>> set : allSources) 
+		{
+			pq.add(set);
+			
+		}
+		while (pq.size() != 0)
+        {
+            System.out.println(pq.remove());
+        }
+		//System.out.println(sor);		
+		
 	}
 	
 	
@@ -75,6 +103,29 @@ public class SplittingSet extends Graph<Integer>
 		}
 
 	}
+
+	
+	public class StringLengthComparator implements Comparator<String>
+	{
+	    @Override
+	    public int compare(String x, String y)
+	    {
+	        // Assume neither string is null. Real code should
+	        // probably be more robust
+	        // You could also just return x.length() - y.length(),
+	        // which would be more efficient.
+	        if (x.length() < y.length())
+	        {
+	            return -1;
+	        }
+	        if (x.length() > y.length())
+	        {
+	            return 1;
+	        }
+	        return 0;
+	    }
+	}
+	
 	
 
 }
