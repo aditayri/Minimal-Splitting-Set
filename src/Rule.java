@@ -5,11 +5,13 @@ public class Rule
 {
 	public LinkedList<Integer> body;
 	public LinkedList<Integer> head;
+	public int rule_number;
 	
-	public Rule()
+	public Rule(int ruleNum)
 	{
 		body = new LinkedList<>();
 		head = new LinkedList<>();
+		this.rule_number = ruleNum;
 	}
 	
 	protected void addToBody(int num)

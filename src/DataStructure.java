@@ -15,7 +15,7 @@ public class DataStructure
 		 T = new Rule[numOfRules];
 		 for (int i = 0; i < T.length; i++) 
 		 {
-			T[i]= new Rule();
+			T[i]= new Rule(i);
 		 }
 		 varHT= new Hashtable<>();
 	 }

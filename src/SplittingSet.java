@@ -58,25 +58,30 @@ public class SplittingSet extends Graph<Integer>
 		do
 		{
 			SplittingSet.add(pq.poll());
-			if(isSplittingSet(SplittingSet))
+			int ruleNumber =isSplittingSet(SplittingSet);
+			if(ruleNumber==-1)//we found a splitting set
 			{
 				break;
 			}
-
+			calc(SplittingSet, ruleNumber);
 			
 		}while(true);
 			
 		
 	}
+	public void calc(List<Set<Vertex<Integer>>> SS, int ruleNumber)//s' = s U tree(r)
+	{
+		
+	}
 	
-	/**Check if the list of sets is a splitting set*/
-	public boolean isSplittingSet(List<Set<Vertex<Integer>>> SS)
+	/**Check if the list of sets is a splitting set, if not- returns the rule number*/
+	public int isSplittingSet(List<Set<Vertex<Integer>>> SS)
 	{
 		for (Rule r :DS.T)
 			for (int var : r.head) 
 				if(varInSS(var, SS)&&!ruleInSS(r, SS))
-					return false;				
-		return true;
+					return r.rule_number;				
+		return -1;
 	}
 	
 	
@@ -141,27 +146,6 @@ public class SplittingSet extends Graph<Integer>
 
 	}
 
-	
-	public class StringLengthComparator implements Comparator<String>
-	{
-	    @Override
-	    public int compare(String x, String y)
-	    {
-	        // Assume neither string is null. Real code should
-	        // probably be more robust
-	        // You could also just return x.length() - y.length(),
-	        // which would be more efficient.
-	        if (x.length() < y.length())
-	        {
-	            return -1;
-	        }
-	        if (x.length() > y.length())
-	        {
-	            return 1;
-	        }
-	        return 0;
-	    }
-	}
 	
 	
 
