@@ -33,7 +33,7 @@ public class SplittingSet extends Graph<Integer>
 
 	}
 	
-	/**minimal splitting set*/
+	/**minimal splitting set algorithm*/
 	public void MSS()
 	{
 		Graph<Integer> g =initGraph(DS, num_of_rules);
@@ -43,34 +43,34 @@ public class SplittingSet extends Graph<Integer>
     
 		PriorityQueue<Set<Vertex<Integer>>> pq=new PriorityQueue<>(Comparator.comparing(Set::size));
 		for (Set<Vertex<Integer>> set : allSources) 
-		{
 			pq.add(set);		
-		}
-		//Vertex<Integer> v = new Vertex<>(1);
-		//List<Set<Vertex<Integer>>> treeOfV = new ArrayList<>();
-	//	System.out.println(sg.treeOfVertex(treeOfV,sg.ver_in_sg(v)));
-		/*while (pq.size() != 0)
-        {
-            System.out.println(pq.size());
-            System.out.println(pq.remove());
-            System.out.println(pq.size());
-        }*/
-	
+		
+		DefaultHashMap<Set<Vertex<Integer>>, Boolean> foundTree = new DefaultHashMap<>(false);//if we found tree of rule
+
 		do
 		{
-			//List<Set<Vertex<Integer>>> SplittingSet = new ArrayList<>();
-			//SplittingSet.add( pq.poll());
 			Set<Vertex<Integer>> S= pq.poll();
-			System.out.println("we pulled from queue " + S);
+		//	System.out.println("we pulled from queue " + S);
 			int ruleNumber = isSplittingSet(S);
 			if(ruleNumber==-1)//we found a splitting set
 			{
-				System.out.println("we found splitting set: " + S);
+				System.out.println("We found splitting set: " + S);
 				break;
 			}
-			System.out.println("rule num: " +ruleNumber);
-			Set<Vertex<Integer>> S2 = treeOfRule(g,sg , S, ruleNumber);//tree(r) U S
-			pq.add(S2);
+			//System.out.println("rule num: " +ruleNumber);
+			Set<Vertex<Integer>> S2 = new HashSet<>();
+			if(!foundTree.get(S))
+			{
+			//	System.out.println("Not found tree for S");
+				S2 = treeOfRule(g,sg , S, ruleNumber);//tree(r) U S
+				foundTree.put(S, true);
+				//System.out.println("add to queue " + S2);
+				pq.add(S2);
+			}
+			else
+			{
+				//System.out.println("already found tree for S");
+			}
 			
 		}while(true);
 		
