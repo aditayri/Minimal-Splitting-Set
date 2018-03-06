@@ -3,12 +3,9 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.PriorityQueue;
 
 
@@ -42,40 +39,79 @@ public class SplittingSet extends Graph<Integer>
 		Graph<Integer> g =initGraph(DS, num_of_rules);
 		SuperGraph sg = new SuperGraph(g);
 		List<Set<Vertex<Integer>>> allSources = sg.findAllRoots();//each set is a source
-		System.out.println(allSources);
+		System.out.println("all sources: " + allSources);
     
 		PriorityQueue<Set<Vertex<Integer>>> pq=new PriorityQueue<>(Comparator.comparing(Set::size));
 		for (Set<Vertex<Integer>> set : allSources) 
 		{
-			pq.add(set);
-			
+			pq.add(set);		
 		}
+		//Vertex<Integer> v = new Vertex<>(1);
+		//List<Set<Vertex<Integer>>> treeOfV = new ArrayList<>();
+	//	System.out.println(sg.treeOfVertex(treeOfV,sg.ver_in_sg(v)));
 		/*while (pq.size() != 0)
         {
+            System.out.println(pq.size());
             System.out.println(pq.remove());
+            System.out.println(pq.size());
         }*/
-		List<Set<Vertex<Integer>>> SplittingSet = new ArrayList<>();
+	
 		do
 		{
-			SplittingSet.add(pq.poll());
-			int ruleNumber =isSplittingSet(SplittingSet);
+			//List<Set<Vertex<Integer>>> SplittingSet = new ArrayList<>();
+			//SplittingSet.add( pq.poll());
+			Set<Vertex<Integer>> S= pq.poll();
+			System.out.println("we pulled from queue " + S);
+			int ruleNumber = isSplittingSet(S);
 			if(ruleNumber==-1)//we found a splitting set
 			{
+				System.out.println("we found splitting set: " + S);
 				break;
 			}
-			calc(SplittingSet, ruleNumber);
+			System.out.println("rule num: " +ruleNumber);
+			Set<Vertex<Integer>> S2 = treeOfRule(g,sg , S, ruleNumber);//tree(r) U S
+			pq.add(S2);
 			
 		}while(true);
-			
 		
 	}
-	public void calc(List<Set<Vertex<Integer>>> SS, int ruleNumber)//s' = s U tree(r)
+	public  Set<Vertex<Integer>> treeOfRule(Graph<Integer> g ,SuperGraph sg ,Set<Vertex<Integer>> S, int ruleNumber)//tree(r) U S
 	{
+		List<Set<Vertex<Integer>>> treeOfR = new ArrayList<>();
+		for(int var : DS.T[ruleNumber].body)
+		{
+			//System.out.println("in body");
+			Vertex<Integer> v = g.getVertex(var);
+			//System.out.println("vertex is : " + v );
+			sg.treeOfVertex(treeOfR, sg.ver_in_sg(v));
+		}
+		for(int var : DS.T[ruleNumber].head)
+		{
+			//System.out.println("in head");
+			Vertex<Integer> v = g.getVertex(var);
+		//	System.out.println("vertex is : " + v );
+			sg.treeOfVertex(treeOfR, sg.ver_in_sg(v));
+		}
+		
+		Set<Vertex<Integer>> toReturn = new HashSet<>();
+		for (Set<Vertex<Integer>> set : treeOfR)
+		{
+			for(Vertex<Integer> ver : set)
+			{
+				toReturn.add(ver);
+			}
+		}
+		for(Vertex<Integer> ver : S)
+		{
+			if(!toReturn.contains(ver))
+				toReturn.add(ver);
+		}
+		return toReturn;
 		
 	}
 	
 	/**Check if the list of sets is a splitting set, if not- returns the rule number*/
-	public int isSplittingSet(List<Set<Vertex<Integer>>> SS)
+	public int isSplittingSet(Set<Vertex<Integer>> SS)
 	{
 		for (Rule r :DS.T)
 			for (int var : r.head) 
@@ -86,7 +122,7 @@ public class SplittingSet extends Graph<Integer>
 	
 	
 	/**Check if all variable in rule r are in the Splitting Set*/
-	private boolean ruleInSS(Rule r , List<Set<Vertex<Integer>>> SS)
+	private boolean ruleInSS(Rule r , Set<Vertex<Integer>> SS)
 	{
 		for (int hvar :r.head)//head of the rule 
 			if(!varInSS(hvar,SS))
@@ -100,12 +136,11 @@ public class SplittingSet extends Graph<Integer>
 	}
 	
 	/**Check if variable is in the Splitting Set*/
-	private boolean varInSS(int var , List<Set<Vertex<Integer>>> SS)
+	private boolean varInSS(int var ,Set<Vertex<Integer>> SS)
 	{
-		for (Set<Vertex<Integer>> set : SS) 
-			for (Vertex<Integer> vertex : set) 
-				if(vertex.id==var)
-					return true;
+		for (Vertex<Integer> vertex : SS) 
+			if(vertex.id==var)
+				return true;
 		
 		return false;
 	}

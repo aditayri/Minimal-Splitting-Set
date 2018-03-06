@@ -118,6 +118,35 @@ public class SuperGraph {
 		}	
 		return true;
 	}
+	public Vertex<Integer> ver_in_sg(Vertex<Integer> v)
+	{
+		for(Vertex<Integer> ver : super_graph.getAllVertex()) 
+		{
+			if(ver.getCCList().contains(v))
+			{
+				return ver;
+			}
+		}
+		return new Vertex<>(-1);
+	}
+	public List<Set<Vertex<Integer>>> treeOfVertex(List<Set<Vertex<Integer>>> a ,Vertex<Integer> v)
+	{
+		if(!a.contains(v.getCCList()))
+		{
+			a.add(v.getCCList());
+		}
+		for (Vertex<Integer> ver : super_graph.getAllVertex())
+		{
+			if(super_graph.hasEdge(ver, v))
+			{
+				a.add(ver.getCCList());
+				treeOfVertex(a, ver);
+			}
+		}
+		
+		//System.out.println(a);
+		return a;
+	}
 	
 	/*public static void main(String args[]){
         Graph<Integer> g = new Graph<>(true);
