@@ -1,10 +1,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -51,37 +55,48 @@ public class SplittingSet extends Graph<Integer>
 	/**minimal splitting set algorithm*/
 	public void MSS(Graph<Integer> g , SuperGraph sg , PriorityQueue<Set<Vertex<Integer>>> pq)
 	{	
-		DefaultHashMap<Set<Vertex<Integer>>, Boolean> foundTree = new DefaultHashMap<>(false);//if we found tree of rule
-
+		DefaultHashMap<Integer, Boolean> foundTree = new DefaultHashMap<>(false);//if we found tree of rule
+		Map<Integer, Set<Vertex<Integer>>> trees = new HashMap<>();
 		do
 		{
 			Set<Vertex<Integer>> S= pq.poll();
-		//	System.out.println("we pulled from queue " + S);
+			System.out.println("we pulled from queue " + S);
 			int ruleNumber = isSplittingSet(S);
 			if(ruleNumber==-1)//we found a splitting set
 			{
 				System.out.println("We found splitting set: " + S);
 				break;
 			}
-			//System.out.println("rule num: " +ruleNumber);
+			System.out.println("rule num: " +ruleNumber);
 			Set<Vertex<Integer>> S2 = new HashSet<>();
-			if(!foundTree.get(S))
+			if(!foundTree.get(ruleNumber))
 			{
-			//	System.out.println("Not found tree for S");
-				S2 = treeOfRule(g,sg , S, ruleNumber);//tree(r) U S
-				foundTree.put(S, true);
-				//System.out.println("add to queue " + S2);
+				System.out.println("Not found tree for rule " + ruleNumber);
+				S2 = treeOfRule(g,sg , ruleNumber);//tree(r) 
+				System.out.println("found tree from function : " + S2);
+				trees.put(ruleNumber, S2);
+				System.out.println("put in trees hashmap");
+				uniteS(S2, S);
+				System.out.println("unite with S : " + S2);
+				foundTree.put(ruleNumber, true);
+				System.out.println("add to queue " + S2);
 				pq.add(S2);
 			}
-			else
+			else//already found tree for this rule
 			{
-				//System.out.println("already found tree for S");
+				System.out.println("already have tree in hash map");
+				S2=trees.get(ruleNumber);
+				System.out.println("get from hashmap " + S2);
+				uniteS(S2, S);
+				pq.add(S2);
+					
+				System.out.println("after unite with S : " + S2);
 			}
 			
 		}while(true);
 		
 	}
-	public  Set<Vertex<Integer>> treeOfRule(Graph<Integer> g ,SuperGraph sg ,Set<Vertex<Integer>> S, int ruleNumber)//tree(r) U S
+	public  Set<Vertex<Integer>> treeOfRule(Graph<Integer> g ,SuperGraph sg , int ruleNumber)//tree(r) U S
 	{
 		List<Set<Vertex<Integer>>> treeOfR = new ArrayList<>();
 		for(int var : DS.T[ruleNumber].body)
@@ -107,13 +122,18 @@ public class SplittingSet extends Graph<Integer>
 				toReturn.add(ver);
 			}
 		}
-		for(Vertex<Integer> ver : S)
-		{
-			if(!toReturn.contains(ver))
-				toReturn.add(ver);
-		}
+		
 		return toReturn;
 		
+	}
+	
+	public void uniteS(Set<Vertex<Integer>> dest,Set<Vertex<Integer>> src)
+	{
+		for(Vertex<Integer> ver : src)
+		{
+			if(!dest.contains(ver))
+				dest.add(ver);
+		}
 	}
 	
 	/**Check if the list of sets is a splitting set, if not- returns the rule number*/
