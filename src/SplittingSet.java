@@ -26,25 +26,31 @@ public class SplittingSet extends Graph<Integer>
 		SplittingSet s = new SplittingSet();
 		s.readfile();
 	//	s.DS.printHashTable();
-		s.MSS();
 		
+		//init the graph
+		Graph<Integer> g =initGraph(s.DS, s.num_of_rules);
 		
-		
-
-	}
-	
-	/**minimal splitting set algorithm*/
-	public void MSS()
-	{
-		Graph<Integer> g =initGraph(DS, num_of_rules);
+		//find super graph
 		SuperGraph sg = new SuperGraph(g);
+		
+		//find all sources of super graph
 		List<Set<Vertex<Integer>>> allSources = sg.findAllRoots();//each set is a source
 		System.out.println("all sources: " + allSources);
-    
+		
+		//init priority queue with all sources the smallest is first
 		PriorityQueue<Set<Vertex<Integer>>> pq=new PriorityQueue<>(Comparator.comparing(Set::size));
 		for (Set<Vertex<Integer>> set : allSources) 
 			pq.add(set);		
 		
+		
+		//Start the algorithm
+		s.MSS(g ,sg ,pq);
+		
+	}
+	
+	/**minimal splitting set algorithm*/
+	public void MSS(Graph<Integer> g , SuperGraph sg , PriorityQueue<Set<Vertex<Integer>>> pq)
+	{	
 		DefaultHashMap<Set<Vertex<Integer>>, Boolean> foundTree = new DefaultHashMap<>(false);//if we found tree of rule
 
 		do
