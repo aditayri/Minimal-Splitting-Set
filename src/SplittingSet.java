@@ -48,12 +48,13 @@ public class SplittingSet extends Graph<Integer>
 		
 		
 		//Start the algorithm
-		s.MSS(g ,sg ,pq);
-		
+		Set<Vertex<Integer>> MinimalSplittingSet = new HashSet<>();
+		MinimalSplittingSet = s.MSS(g ,sg ,pq);
+		System.out.println("We found minimal splitting set: " + MinimalSplittingSet);		
 	}
 	
 	/**minimal splitting set algorithm*/
-	public void MSS(Graph<Integer> g , SuperGraph sg , PriorityQueue<Set<Vertex<Integer>>> pq)
+	public Set<Vertex<Integer>> MSS(Graph<Integer> g , SuperGraph sg , PriorityQueue<Set<Vertex<Integer>>> pq)
 	{	
 		DefaultHashMap<Integer, Boolean> foundTree = new DefaultHashMap<>(false);//if we found tree of rule
 		Map<Integer, Set<Vertex<Integer>>> trees = new HashMap<>();
@@ -64,8 +65,7 @@ public class SplittingSet extends Graph<Integer>
 			int ruleNumber = isSplittingSet(S);
 			if(ruleNumber==-1)//we found a splitting set
 			{
-				System.out.println("We found splitting set: " + S);
-				break;
+				return S;
 			}
 			System.out.println("rule num: " +ruleNumber);
 			Set<Vertex<Integer>> S2 = new HashSet<>();

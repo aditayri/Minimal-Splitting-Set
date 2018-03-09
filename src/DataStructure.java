@@ -1,13 +1,9 @@
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.Set;
-
 
 public class DataStructure 
 {
 	
 	 public Rule[] T ;//collection of rules
-	 public Hashtable<Integer, LinkedList<Integer>> varHT ;//in which rules a variable appears
+	// public Hashtable<Integer, LinkedList<Integer>> varHT ;//in which rules a variable appears
 	 
 	 
 	 public DataStructure(int numOfRules)
@@ -17,7 +13,7 @@ public class DataStructure
 		 {
 			T[i]= new Rule(i);
 		 }
-		 varHT= new Hashtable<>();
+		// varHT= new Hashtable<>();
 	 }
 	 
 	 public void addRule(int index , int variable)
@@ -31,11 +27,11 @@ public class DataStructure
 		 {
 			 T[index].addToHead(variable);
 		 }
-		 addToHashTable(variable, index);
+		// addToHashTable(variable, index);
 		 
 	 }
 	 
-	 private void addToHashTable(int var , int ruleIndex) 
+	/* private void addToHashTable(int var , int ruleIndex) 
 	    {
 	    	LinkedList<Integer> ls;
 	    	if(varHT.containsKey(var))//key exist
@@ -79,21 +75,6 @@ public class DataStructure
 	    }
 	 
 	 
-	
+	*/
 	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-	 
-
 }
