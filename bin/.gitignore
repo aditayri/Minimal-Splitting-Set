@@ -1,4 +1,5 @@
 /DataStructure.class
+/DefaultHashMap.class
 /Edge.class
 /Graph.class
 /Rule.class
@@ -6,7 +7,7 @@
 /SplittingSet.class
 /SuperGraph.class
 /Vertex.class
-/SizedSetComarator.class
-/SplittingSet$StringLengthComparator.class
-/DefaultHashMap.class
-/MultiKeyHashMap.class
+/Clause.class
+/DavisPutnamHelper.class
+/MinimalModel.class
+/Main.class
